@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ audiobook.title }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+        form {
+            margin-top: 20px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        .comment-section {
+            margin-top: 40px;
+        }
+        textarea {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            resize: vertical;
+        }
+        .comment {
+            background: #f1f1f1;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        .comment strong {
+            color: #333;
+        }
+        .like-btn {
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if audiobook.cover_image %}
+            <img src="{{ audiobook.cover_image.url }}" alt="Cover">
+        {% endif %}
+
+        <h1>{{ audiobook.title }}</h1>
+        <h3>by {{ audiobook.author }}</h3>
+
+        <audio controls>
+            <source src="{{ audiobook.audio_file.url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+
+        <!-- Like Button -->
+        <form method="post" class="like-btn">
+            {% csrf_token %}
+            {% if is_liked %}
+                <button disabled>👍 Liked ({{ audiobook.like_count }})</button>
+            {% else %}
+                <button name="like">👍 Like ({{ audiobook.like_count }})</button>
+            {% endif %}
+        </form>
+
+        <!-- Favorite Button -->
+        {% if is_favorite %}
+            <form action="{% url 'remove_favorite' audiobook.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">❤️ Remove from Favorites</button>
+            </form>
+        {% else %}
+            <form action="{% url 'add_favorite' audiobook.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit">🤍 Add to Favorites</button>
+            </form>
+        {% endif %}
+
+        <div class="comment-section">
+            <h3>💬 Comments</h3>
+
+            <!-- Add Comment -->
+            <form method="post">
+                {% csrf_token %}
+                <textarea name="comment_text" rows="3" required placeholder="Write a comment..."></textarea>
+                <button name="comment">Post Comment</button>
+            </form>
+
+            <!-- Comment List -->
+            {% for comment in comments %}
+                <div class="comment">
+                    <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
+                    <br><small>{{ comment.created_at }}</small>
+                </div>
+            {% empty %}
+                <p>No comments yet.</p>
+            {% endfor %}
+        </div>
+
+        <a href="{% url 'homepage' %}">← Back to homepage</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome, {{ user.username }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 30px;
+            background: #eaeaea;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .nav a,
+        .nav-link-button {
+            padding: 10px 15px;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font: inherit;
+            display: inline-block;
+        }
+
+        .nav a:hover,
+        .nav-link-button:hover {
+            background: #218838;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">
+        <a href="{% url 'upload_audio' %}">Upload</a>
+        <a href="{% url 'favorites' %}">Favorites</a>
+        <a href="{% url 'profile' %}">Profile</a>
+        <a href="{% url 'my_uploads' %}">My Uploads</a>
+
+
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-link-button">Logout</button>
+        </form>
+    </div>
+
+    <h1>🎧 Welcome {{ user.username }}! Explore Audiobooks</h1>
+
+    <div class="grid">
+        {% for book in audiobooks %}
+            <div class="card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="cover">
+                {% else %}
+                    <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
+                {% endif %}
+                <h3>{{ book.title }}</h3>
+                <p><em>{{ book.author }}</em></p>
+                <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
+            </div>
+        {% empty %}
+            <p>No audiobooks uploaded yet.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ audiobook.title }}</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 30px;
+            background-color: #f9f9f9;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        img {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        audio {
+            width: 100%;
+            margin-top: 20px;
+        }
+        a.button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 16px;
+            background-color: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        a.button:hover {
+            background-color: #0056b3;
+        }
+        a.back-link {
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #007bff;
+        }
+        a.back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if audiobook.cover_image %}
+            <img src="{{ audiobook.cover_image.url }}" alt="Cover">
+        {% endif %}
+
+        <h1>{{ audiobook.title }}</h1>
+        <h3>by {{ audiobook.author }}</h3>
+
+        {% if audiobook.audio_file %}
+            <audio controls>
+                <source src="{{ audiobook.audio_file.url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        {% else %}
+            <p>No audio available.</p>
+        {% endif %}
+
+        <p style="margin-top: 30px; font-weight: bold;">To comment, like, or favorite this audiobook:</p>
+        <a href="{% url 'login' %}" class="button">🔐 Login to interact</a>
+
+        <a href="{% url 'homepage' %}" class="back-link">← Back to homepage</a>
+    </div>
+</body>
+</html>

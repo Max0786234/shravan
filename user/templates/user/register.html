@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Shravan 1.0</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eef2f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .register-container {
+            background-color: white;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            width: 400px;
+        }
+        .register-container h2 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .register-container form input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .register-container form button {
+            width: 100%;
+            background-color: #28a745;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .register-container .login-link {
+            text-align: center;
+            margin-top: 10px;
+        }
+        .login-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .errorlist {
+            color: red;
+            list-style: none;
+            padding: 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+<div class="register-container">
+    <h2>Register</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <label>Username</label>
+        {{ form.username }}
+        {{ form.username.errors }}
+
+        <label>Email</label>
+        {{ form.email }}
+        {{ form.email.errors }}
+
+        <label>Password</label>
+        {{ form.password1 }}
+        {{ form.password1.errors }}
+
+        <label>Confirm Password</label>
+        {{ form.password2 }}
+        {{ form.password2.errors }}
+
+        <button type="submit">Create Account</button>
+    </form>
+
+    <div class="login-link">
+        Already have an account? <a href="{% url 'login' %}">Login</a>
+    </div>
+</div>
+</body>
+</html>
