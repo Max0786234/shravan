@@ -1,0 +1,23 @@
+.nav {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.nav a,
+.nav-link-button {
+    background: none;
+    border: none;
+    color: #0055aa;
+    font: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    padding: 6px 10px;
+    transition: color 0.3s;
+}
+
+.nav a:hover,
+.nav-link-button:hover {
+    color: #003377;
+    text-decoration: underline;
+}

@@ -26,7 +26,14 @@ SECRET_KEY = 'django-insecure-j28&6fdc32pwk(i0x_%!l0&l5k$5ouu$3x@08qk=%9ss(v*c*b
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'audioverse.onrender.com']
+
+import os
+
+STATIC_URL = '/static/'
+
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Required for collectstatic
+
 
 
 # Application definition
