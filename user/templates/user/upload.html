@@ -178,6 +178,10 @@
         {{ form.author }}
         {{ form.author.errors }}
 
+        <label>Genre</label>
+        {{ form.genre }}
+        {{ form.genre.errors }}
+
         <label>Description</label>
         {{ form.description }}
         {{ form.description.errors }}
@@ -189,6 +193,8 @@
         <label>Audio File</label>
         {{ form.audio_file }}
         {{ form.audio_file.errors }}
+
+        
 
         <button type="submit">Upload</button>
     </form>

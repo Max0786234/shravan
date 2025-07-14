@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from .models import Audiobook  # make sure this model exists
 
 GENRE_CHOICES = [
-    ("", "Select Genre Based on Mood"),
+    ("", "Select Genre"),
 
     # 🌟 Feel-Good / Uplifting
     ("Feel-Good Fiction", "Feel-Good Fiction"),
@@ -70,7 +70,7 @@ class AudioUploadForm(forms.ModelForm):
     genre = forms.ChoiceField(
         choices=GENRE_CHOICES,
         required=True,
-        label="Genre (Mood-Based)",
+        label="Genre",
         widget=forms.Select(attrs={
             'class': 'form-control'
         })
