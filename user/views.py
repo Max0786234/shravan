@@ -95,13 +95,33 @@ def remove_favorite(request, pk):
 # Show all favorites
 @login_required(login_url='login')
 def favorites(request):
-    favorite_items = Favorite.objects.filter(user=request.user).select_related('audiobook')
-    return render(request, 'user/favorites.html', {'favorites': favorite_items})
+    query = request.GET.get('q')
 
+    # Get all favorite audiobooks for the current user
+    favorite_items = Favorite.objects.filter(user=request.user).select_related('audiobook')
+
+    # If there's a search query, filter the audiobooks inside favorites
+    if query:
+        favorite_items = favorite_items.filter(
+            Q(audiobook__title__icontains=query) |
+            Q(audiobook__author__icontains=query) |
+            Q(audiobook__genre__icontains=query)
+        )
+
+    return render(request, 'user/favorites.html', {'favorites': favorite_items})
 
 @login_required
 def my_uploads(request):
-    audiobooks = Audiobook.objects.filter(uploaded_by=request.user)
+    query = request.GET.get('q')
+    if query:
+        audiobooks = Audiobook.objects.filter(
+            Q(title__icontains=query) |
+            Q(author__icontains=query) |
+            Q(genre__icontains=query)
+        ).distinct()
+    else:
+        audiobooks = Audiobook.objects.all()
+    
     return render(request, 'user/my_uploads.html', {'audiobooks': audiobooks})
 
 

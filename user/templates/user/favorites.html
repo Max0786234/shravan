@@ -1,76 +1,238 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Your Favorites</title>
+    <meta charset="UTF-8">
+    <title>My Favorites | AudioVerse</title>
     <style>
         body {
-            font-family: sans-serif;
-            padding: 30px;
-            background-color: #f0f0f0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #CAC4CE;
         }
-        h1 {
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px 20px;
+            width: 300px;
+            border-radius: 25px;
+            border: 1.5px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 1.5px rgba(255, 50, 97, 0.2);
+        }
+
+        .nav-button {
+    text-decoration: none;
+    color: #3f3d56;
+    font-weight: 600;
+    border: 1.5px solid #3f3d56;
+    padding: 8px 16px;
+    border-radius: 25px;
+    font-size: 14px;
+    background: transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 15px; /* This matches spacing of .nav a */
+}
+
+.nav-button:hover {
+    background-color: #3f3d56;
+    color: #fff;
+}
+
+
+        .nav a {
+            margin-left: 15px;
+            text-decoration: none;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
+        .main-content {
+            padding: 20px 40px 60px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #3f3d56;
+            margin-bottom: 30px;
             text-align: center;
         }
-        .grid {
+
+        .book-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
         }
-        .card {
-            background: white;
+
+        .book-card {
+            background-color: #fff;
             padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             text-align: center;
+            transition: transform 0.2s ease;
         }
-        .card img {
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-card img {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
             border-radius: 8px;
+            margin-bottom: 10px;
         }
-        .card h3 {
+
+        .book-card h4 {
             margin: 10px 0 5px;
+            font-size: 16px;
+            color: #3f3d56;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .card p {
-            font-style: italic;
-            color: #444;
+
+        .book-card p {
+            font-size: 14px;
+            color: #555;
+            margin: 0 0 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
-        .card a {
+
+        .book-card a {
+            display: inline-block;
+            background-color: #ff6f61;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
             text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
         }
-        .back-link {
-            display: block;
+
+        .book-card a:hover {
+            background-color: #e55c50;
+        }
+
+        .no-books {
             text-align: center;
-            margin-top: 30px;
+            color: #333;
+            font-size: 18px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-bar input[type="text"] {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav {
+                margin-top: 10px;
+            }
+
+            .book-grid {
+                padding: 0;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>❤️ Your Favorite Audiobooks</h1>
 
-    <div class="grid">
-        {% for fav in favorites %}
-            <div class="card">
-                {% if fav.audiobook.cover_image %}
-                    <img src="{{ fav.audiobook.cover_image.url }}" alt="Cover">
-                {% else %}
-                    <img src="https://via.placeholder.com/200x180?text=No+Cover" alt="No Cover">
-                {% endif %}
-                <h3>{{ fav.audiobook.title }}</h3>
-                <p>by {{ fav.audiobook.author }}</p>
-                <a href="{% url 'audiobook_detail' fav.audiobook.id %}">🎧 Listen</a>
+    <!-- Header / Navbar -->
+    <div class="header">
+        <div class="header-left">
+            <h1>AudioVerse</h1>
+            <div class="search-bar">
+                <form method="GET" action="">
+                    <input type="text" name="q" placeholder="Search your favorites..." value="{{ request.GET.q }}">
+                </form>
             </div>
-        {% empty %}
-            <p style="text-align:center; font-size:18px;">You haven't added any favorites yet.</p>
-        {% endfor %}
+        </div>
+        <div class="nav">
+            <a href="{% url 'homepage' %}">Home</a>
+            <a href="{% url 'profile' %}">My Profile</a>
+            <a href="{% url 'my_uploads' %}">My Uploads</a>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="nav-button">Logout</button>
+            </form>
+
+
+        </div>
     </div>
 
-    <div class="back-link">
-        <a href="{% url 'homepage' %}">← Back to homepage</a>
+    <!-- Favorite Books Grid -->
+    <div class="main-content">
+        <h2>❤️ Your Favorite Audiobooks</h2>
+        {% if favorites %}
+        <div class="book-grid">
+            {% for fav in favorites %}
+                <div class="book-card">
+                    {% if fav.audiobook.cover_image %}
+                        <img src="{{ fav.audiobook.cover_image.url }}" alt="Cover">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
+                    {% endif %}
+                    <h4>{{ fav.audiobook.title }}</h4>
+                    <p>{{ fav.audiobook.author }}</p>
+                    <a href="{% url 'audiobook_detail' fav.audiobook.id %}">🎧 Listen Now</a>
+                </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <p class="no-books">You haven’t added any favorites yet.</p>
+        {% endif %}
     </div>
+
 </body>
 </html>

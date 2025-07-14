@@ -1,96 +1,193 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>{{ audiobook.title }}</title>
+    <meta charset="UTF-8">
+    <title>{{ audiobook.title }} | AudioVerse</title>
     <style>
         body {
-            font-family: sans-serif;
-            padding: 30px;
-            background-color: #f9f9f9;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f0f5;
         }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
         .container {
-            max-width: 700px;
-            margin: auto;
+            max-width: 750px;
+            margin: 40px auto;
             background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
+
         img {
             width: 100%;
-            max-height: 400px;
-            object-fit: cover;
-            border-radius: 8px;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
+
+        h1, h3 {
+            text-align: center;
+            color: #3f3d56;
+        }
+
         audio {
             width: 100%;
             margin-top: 20px;
         }
-        form {
-            margin-top: 20px;
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
+
+        .action-buttons form {
+            flex: 1;
+            min-width: 150px;
+        }
+
         button {
-            background-color: #007bff;
+            width: 100%;
+            background-color: #28a745;
             color: white;
+            padding: 10px;
             border: none;
-            padding: 10px 16px;
-            border-radius: 6px;
-            cursor: pointer;
+            border-radius: 25px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
+
         button:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
-        a {
-            display: inline-block;
-            margin-top: 15px;
-            text-decoration: none;
-            color: #007bff;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
+
         .comment-section {
             margin-top: 40px;
         }
+
+        .comment-section h3 {
+            margin-bottom: 15px;
+            color: #3f3d56;
+        }
+
         textarea {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             font-size: 14px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
+            border-radius: 8px;
+            border: 1.5px solid #ccc;
             resize: vertical;
+            margin-bottom: 10px;
         }
+
         .comment {
-            background: #f1f1f1;
-            padding: 10px 15px;
-            border-radius: 6px;
+            background: #f8f8f8;
+            padding: 12px 15px;
+            border-radius: 8px;
             margin-top: 10px;
         }
+
         .comment strong {
             color: #333;
         }
-        .like-btn {
-            margin-top: 15px;
+
+        .back-link {
+            display: block;
+            margin-top: 30px;
+            text-align: center;
+            text-decoration: none;
+            color: #3f3d56;
+            font-weight: 600;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        @media screen and (max-width: 600px) {
+            .action-buttons {
+                flex-direction: column;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        {% if audiobook.cover_image %}
-            <img src="{{ audiobook.cover_image.url }}" alt="Cover">
-        {% endif %}
 
-        <h1>{{ audiobook.title }}</h1>
-        <h3>by {{ audiobook.author }}</h3>
+<!-- Header -->
+<div class="header">
+    <h1>AudioVerse</h1>
+    <div class="nav">
+        <a href="{% url 'homepage' %}">Home</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'favorites' %}">Favorites</a>
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+</div>
 
-        <audio controls>
-            <source src="{{ audiobook.audio_file.url }}" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
+<!-- Main Content -->
+<div class="container">
+    {% if audiobook.cover_image %}
+        <img src="{{ audiobook.cover_image.url }}" alt="{{ audiobook.title }} Cover">
+    {% endif %}
 
+    <h1>{{ audiobook.title }}</h1>
+    <h3>by {{ audiobook.author }}</h3>
+
+    <audio controls>
+        <source src="{{ audiobook.audio_file.url }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
+    <!-- Like + Favorite Buttons -->
+    <div class="action-buttons">
         <!-- Like Button -->
-        <form method="post" class="like-btn">
+        <form method="post">
             {% csrf_token %}
             {% if is_liked %}
                 <button disabled>👍 Liked ({{ audiobook.like_count }})</button>
@@ -103,7 +200,7 @@
         {% if is_favorite %}
             <form action="{% url 'remove_favorite' audiobook.id %}" method="post">
                 {% csrf_token %}
-                <button type="submit">❤️ Remove from Favorites</button>
+                <button type="submit">❤️ Remove Favorite</button>
             </form>
         {% else %}
             <form action="{% url 'add_favorite' audiobook.id %}" method="post">
@@ -111,29 +208,32 @@
                 <button type="submit">🤍 Add to Favorites</button>
             </form>
         {% endif %}
-
-        <div class="comment-section">
-            <h3>💬 Comments</h3>
-
-            <!-- Add Comment -->
-            <form method="post">
-                {% csrf_token %}
-                <textarea name="comment_text" rows="3" required placeholder="Write a comment..."></textarea>
-                <button name="comment">Post Comment</button>
-            </form>
-
-            <!-- Comment List -->
-            {% for comment in comments %}
-                <div class="comment">
-                    <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
-                    <br><small>{{ comment.created_at }}</small>
-                </div>
-            {% empty %}
-                <p>No comments yet.</p>
-            {% endfor %}
-        </div>
-
-        <a href="{% url 'homepage' %}">← Back to homepage</a>
     </div>
+
+    <!-- Comment Section -->
+    <div class="comment-section">
+        <h3>💬 Comments</h3>
+
+        <!-- Add Comment -->
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="comment_text" rows="3" required placeholder="Write a comment..."></textarea>
+            <button name="comment">Post Comment</button>
+        </form>
+
+        <!-- Comment List -->
+        {% for comment in comments %}
+            <div class="comment">
+                <strong>{{ comment.user.username }}</strong>: {{ comment.text }}
+                <br><small>{{ comment.created_at }}</small>
+            </div>
+        {% empty %}
+            <p>No comments yet.</p>
+        {% endfor %}
+    </div>
+
+    <a class="back-link" href="{% url 'homepage' %}">← Back to homepage</a>
+</div>
+
 </body>
 </html>

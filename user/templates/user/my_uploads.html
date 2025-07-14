@@ -1,75 +1,242 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>My Uploaded Audiobooks</title>
+    <meta charset="UTF-8">
+    <title>My Uploaded Audiobooks | AudioVerse</title>
     <style>
         body {
-            font-family: sans-serif;
-            background: #f4f4f4;
-            padding: 30px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: #CAC4CE;
         }
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-        }
-        .card {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-        }
-        .card img {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .nav {
-            margin-bottom: 20px;
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
+        }
+
+        .search-bar input[type="text"] {
+            padding: 10px 20px;
+            width: 300px;
+            border-radius: 25px;
+            border: 1.5px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 1.5px rgba(255, 50, 97, 0.2);
+        }
+
+        .nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
         .nav a {
-            padding: 10px 15px;
-            background: #007bff;
-            color: white;
             text-decoration: none;
-            border-radius: 5px;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .nav a:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
+        .nav button.nav-btn {
+            background: transparent;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav button.nav-btn:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
+        .main-content {
+            padding: 40px 60px;
+        }
+
+        h2 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .book-card {
+            background-color: whitesmoke;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .book-card h4 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .book-card p {
+            font-size: 14px;
+            color: #777;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .book-card a {
+            margin-top: 10px;
+            background: #f19f6c;
+            color: black;
+            padding: 8px 14px;
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .book-card:hover a {
+            background-color: #7e807c;
+        }
+
+        .no-books {
+            text-align: center;
+            color: #333;
+            font-size: 18px;
+        }
+
+        @media screen and (max-width: 768px) {
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .search-bar input[type="text"] {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .nav {
+                justify-content: flex-start;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="nav">
-    <a href="{% url 'home_loggedin' %}">🏠 Home</a>
-    <a href="{% url 'upload_audio' %}">Upload</a>
-    <a href="{% url 'favorites' %}">Favorites</a>
+<!-- Header / Navbar -->
+<div class="header">
+    <div class="header-left">
+        <h1>AudioVerse</h1>
+        <div class="search-bar">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Search your uploads..." value="{{ request.GET.q }}">
+            </form>
+        </div>
+    </div>
+    <div class="nav">
+        <a href="{% url 'homepage' %}">Home</a>
+        <a href="{% url 'profile' %}">My Profile</a>
+        <a href="{% url 'favorites' %}">Favourites</a>
+        <a class="upload-btn" href="{% url 'upload_audio' %}">Upload</a>
+        <form action="{% url 'logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-btn">Logout</button>
+        </form>
+    </div>
 </div>
 
-<h1>🎧 My Uploaded Audiobooks</h1>
-
-<div class="grid">
-    {% for book in audiobooks %}
-        <div class="card">
-            {% if book.cover_image %}
-                <img src="{{ book.cover_image.url }}" alt="cover">
-            {% else %}
-                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
-            {% endif %}
-            <h3>{{ book.title }}</h3>
-            <p><em>{{ book.author }}</em></p>
-            <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen</a>
-        </div>
-    {% empty %}
-        <p style="text-align:center;">You haven't uploaded any audiobooks yet.</p>
-    {% endfor %}
+<!-- Uploaded Books Grid -->
+<div class="main-content">
+    <h2>🎧 My Uploaded Audiobooks</h2>
+    {% if audiobooks %}
+    <div class="book-grid">
+        {% for book in audiobooks %}
+            <div class="book-card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="cover">
+                {% else %}
+                    <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
+                {% endif %}
+                <h4>{{ book.title }}</h4>
+                <p><em>{{ book.author }}</em></p>
+                <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen</a>
+            </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="no-books">You haven't uploaded any audiobooks yet.</p>
+    {% endif %}
 </div>
 
 </body>
