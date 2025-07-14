@@ -2,61 +2,147 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Register | Shravan 1.0</title>
+    <title>Register | AudioVerse</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #eef2f7;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #CAC4CE;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
             align-items: center;
-            height: 100vh;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
+        }
+
+        .nav a {
+            text-decoration: none;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .nav a:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
         .register-container {
-            background-color: white;
-            padding: 30px 40px;
-            border-radius: 10px;
-            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
-            width: 400px;
+            background-color: #fff;
+            max-width: 450px;
+            margin: 60px auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
+
         .register-container h2 {
             text-align: center;
+            color: #3f3d56;
             margin-bottom: 25px;
         }
+
+        .register-container form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .register-container form label {
+            align-self: flex-start;
+            margin-left: 5px;
+            font-weight: 600;
+            color: #333;
+        }
+
         .register-container form input {
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             margin-top: 5px;
             margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            border: 1.5px solid #ccc;
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border 0.3s ease;
         }
+
+        .register-container form input:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 1.5px rgba(255, 111, 97, 0.2);
+        }
+
         .register-container form button {
             width: 100%;
             background-color: #28a745;
             color: white;
-            padding: 10px;
+            padding: 12px;
             border: none;
-            border-radius: 5px;
+            border-radius: 25px;
             font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s ease;
         }
-        .register-container .login-link {
-            text-align: center;
-            margin-top: 10px;
+
+        .register-container form button:hover {
+            background-color: #218838;
         }
-        .login-link a {
-            color: #007bff;
-            text-decoration: none;
-        }
+
         .errorlist {
             color: red;
             list-style: none;
             padding: 0;
             font-size: 14px;
+            margin-bottom: 10px;
+            align-self: flex-start;
+        }
+
+        .register-container .login-link {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .login-link a {
+            color: #4285f4;
+            text-decoration: none;
+        }
+
+        @media screen and (max-width: 500px) {
+            .register-container {
+                margin: 30px 20px;
+                padding: 30px 25px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Header -->
+<div class="header">
+    <h1>AudioVerse</h1>
+    <div class="nav">
+        <a href="{% url 'homepage' %}">Home</a>
+    </div>
+</div>
+
+<!-- Register Box -->
 <div class="register-container">
     <h2>Register</h2>
 
@@ -87,5 +173,6 @@
         Already have an account? <a href="{% url 'login' %}">Login</a>
     </div>
 </div>
+
 </body>
 </html>

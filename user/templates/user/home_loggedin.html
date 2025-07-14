@@ -1,55 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Welcome, {{ user.username }}</title>
+    <meta charset="UTF-8">
+    <title>Welcome | AudioVerse</title>
     <style>
         body {
-            font-family: sans-serif;
-            padding: 30px;
-            background: #eaeaea;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #CAC4CE;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
         }
 
         .nav {
             display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
         }
 
         .nav a,
-        .nav-link-button {
-            padding: 10px 15px;
-            background: #28a745;
-            color: white;
+        .nav button {
             text-decoration: none;
-            border: none;
-            border-radius: 5px;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 8px 16px;
+            border-radius: 25px;
+            font-size: 14px;
+            background: transparent;
             cursor: pointer;
-            font: inherit;
-            display: inline-block;
+            transition: all 0.3s ease;
         }
 
         .nav a:hover,
-        .nav-link-button:hover {
-            background: #218838;
+        .nav button:hover {
+            background-color: #3f3d56;
+            color: #fff;
         }
 
-        h1 {
+        .upload-icon {
+            font-size: 20px;
+            padding: 10px 14px;
+            border-radius: 50%;
+            border: 1.5px solid #3f3d56;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #3f3d56;
+        }
+
+        .upload-icon:hover {
+            background-color: #3f3d56;
+            color: #fff;
+        }
+
+        h2 {
             text-align: center;
+            margin: 30px 0 20px;
+            color: #3f3d56;
         }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
+            gap: 25px;
+            padding: 20px 40px 60px;
         }
 
         .card {
-            background: white;
+            background-color: #fff;
             padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             text-align: center;
+            transition: transform 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
         }
 
         .card img {
@@ -57,40 +105,97 @@
             height: 200px;
             object-fit: cover;
             border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .card h3 {
+            margin: 10px 0 5px;
+            color: #3f3d56;
+        }
+
+        .card p {
+            margin: 0 0 10px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .card a {
+            display: inline-block;
+            background-color: #ff6f61;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .card a:hover {
+            background-color: #e55c50;
+        }
+
+        @media screen and (max-width: 600px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .grid {
+                padding: 20px;
+            }
+
+            .nav {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav a,
+            .nav button,
+            .upload-icon {
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+<!-- Header -->
+<div class="header">
+    <h1>AudioVerse</h1>
     <div class="nav">
-        <a href="{% url 'upload_audio' %}">Upload</a>
+        <!-- Plus icon for upload -->
         <a href="{% url 'favorites' %}">Favorites</a>
-        <a href="{% url 'profile' %}">Profile</a>
         <a href="{% url 'my_uploads' %}">My Uploads</a>
-
-
+        <a href="{% url 'profile' %}">Profile</a>
         <form action="{% url 'logout' %}" method="post" style="display:inline;">
             {% csrf_token %}
-            <button type="submit" class="nav-link-button">Logout</button>
+            <button type="submit">Logout</button>
         </form>
     </div>
+</div>
 
-    <h1>🎧 Welcome {{ user.username }}! Explore Audiobooks</h1>
+<!-- Welcome Message -->
+<h2>🎧 Welcome, {{ user.username }}! Explore Audiobooks</h2>
 
-    <div class="grid">
-        {% for book in audiobooks %}
-            <div class="card">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" alt="cover">
-                {% else %}
-                    <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
-                {% endif %}
-                <h3>{{ book.title }}</h3>
-                <p><em>{{ book.author }}</em></p>
-                <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
-            </div>
-        {% empty %}
-            <p>No audiobooks uploaded yet.</p>
-        {% endfor %}
-    </div>
+<!-- Audiobook Grid -->
+<div class="grid">
+    {% for book in audiobooks %}
+        <div class="card">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" alt="cover">
+            {% else %}
+                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
+            {% endif %}
+            <h3>{{ book.title }}</h3>
+            <p>{{ book.author }}</p>
+            <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
+        </div>
+    {% empty %}
+        <p style="text-align:center; color:#333;">No audiobooks uploaded yet.</p>
+    {% endfor %}
+</div>
+
 </body>
 </html>

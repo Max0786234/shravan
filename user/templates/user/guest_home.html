@@ -1,61 +1,372 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Welcome to AudioVerse</title>
+    <meta charset="UTF-8">
+    <title>AudioVerse - Audiobooks Online</title>
     <style>
-        body { font-family: sans-serif; padding: 30px; background: #f0f0f0; }
-        .nav { margin-bottom: 20px; text-align: right; }
-        .nav a {
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #CAC4CE;
+        }
+
+        .header {
+            background-color: #fff;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .5);
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #3f3d56;
+            margin: 0;
+        }
+
+        .search-bar input[type="text"] {
             padding: 10px 20px;
-            background: #007BFF;
-            color: white;
+            width: 300px;
+            border-radius: 25px;
+            border: 1.5px solid #ccc;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 1.5px rgba(255, 50, 97, 0.2);
+        }
+
+        .nav a {
+            margin-left: 20px;
             text-decoration: none;
-            border-radius: 5px;
-            margin-left: 10px;
+            color: #3f3d56;
+            font-weight: 600;
+            border: 1.5px solid #3f3d56;
+            padding: 6px 14px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
         }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
-        .card {
-            background: white; padding: 15px; border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center;
+
+        .nav a:hover {
+            background-color: #3f3d56;
+            color: #fff;
         }
-        .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
-        .card a.button {
-            margin-top: 10px;
+
+        .carousel-container {
+            position: relative;
+            overflow: hidden;
+            background: #e7e2ec;
+        }
+
+        .carousel-slide {
+            display: none;
+            animation: fade 1s ease-in-out;
+        }
+
+        .carousel-slide.active {
+            display: block;
+        }
+
+        @keyframes fade {
+            from { opacity: 0.4; }
+            to { opacity: 1; }
+        }
+
+        .carousel-dots {
+            text-align: center;
+            padding: 15px 0;
+        }
+
+        .dot {
+            height: 10px;
+            width: 10px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
             display: inline-block;
-            background: #28a745;
-            color: white;
+            transition: background-color 0.6s ease;
+            cursor: pointer;
+        }
+
+        .active-dot {
+            background-color: #3f3d56;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 60px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 500px;
+        }
+
+        .hero-text h2 {
+            font-size: 36px;
+            color: #3f3d56;
+        }
+
+        .hero-text p {
+            font-size: 17px;
+            color: #555;
+            margin: 20px 0;
+        }
+
+        .hero-text .btn {
+            background-color: #ff6f61;
+            color: #fff;
+            padding: 12px 24px;
+            font-size: 15px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .hero-img {
+            flex: 1;
+            text-align: center;
+        }
+
+        .hero-img img {
+            width: 250px;
+            max-height: 250px;
+            object-fit: contain;
+        }
+
+        .books-section {
+            padding: 30px 60px;
+            background-color: #ecececff;
+        }
+
+        .books-section h3 {
+            text-align: left;
+            font-size: 26px;
+            margin-bottom: 30px;
+            color: #3f3d56;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 30px;
+        }
+
+        .book-card {
+            background-color: Whitesmoke;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            width: 220px;
+            height: 320px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .book-card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .book-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .book-card h4 {
+            margin: 10px 0 5px;
+            font-size: 18px;
+            color: #333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .book-card p {
+            font-size: 14px;
+            color: #777;
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .book-card a {
+            margin-top: 10px;
+            background: #f19f6cff;
+            color: black;
             padding: 8px 14px;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 20px;
+            font-size: 14px;
+            transition: background 0.3s ease;
         }
-        .card a.button:hover {
-            background: #218838;
+
+        .book-card:hover a {
+            background-color: #7e807cff;
         }
-        h1 { text-align: center; }
+
+        @media screen and (max-width: 768px) {
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-text,
+            .hero-img {
+                max-width: 100%;
+            }
+
+            .search-bar input[type="text"] {
+                width: 100%;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="nav">
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Register</a>
+
+    <div class="header">
+        <div class="header-left">
+            <h1>AudioVerse</h1>
+            <div class="search-bar">
+                <form method="GET" action="">
+                    <input type="text" name="q" placeholder="Search audiobooks..." value="{{ request.GET.q }}">
+                </form>
+            </div>
+        </div>
+        <div class="nav">
+            <a href="{% url 'login' %}">Login</a>
+            <a href="{% url 'register' %}">Register</a>
+        </div>
     </div>
 
-    <h1>🎧 Discover Audiobooks</h1>
-    <div class="grid">
-        {% for book in audiobooks %}
-            <div class="card">
-                {% if book.cover_image %}
-                    <img src="{{ book.cover_image.url }}" alt="cover">
-                {% else %}
-                    <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
-                {% endif %}
-                <h3>{{ book.title }}</h3>
-                <p><em>{{ book.author }}</em></p>
-                <a href="{% url 'audiobook_detail_guest' book.id %}" class="button">🎧 Listen Now</a>
+    <!-- Carousel section -->
+    <div class="carousel-container">
+        <div class="carousel-slide active">
+            <div class="hero">
+                <div class="hero-text">
+                    <h2>Start Your Listening Journey</h2>
+                    <p>Experience books through voices that bring them to life. Wherever you are.</p>
+                    <a href="#books" class="btn">Start Now</a>
+                </div>
+                <div class="hero-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4039/4039516.png" alt="Audiobook">
+                </div>
             </div>
-        {% empty %}
-            <p>No audiobooks available yet.</p>
-        {% endfor %}
+        </div>
+        <div class="carousel-slide">
+            <div class="hero">
+                <div class="hero-text">
+                    <h2>Weekly Featured Titles</h2>
+                    <p>Handpicked audiobooks delivered to you every week. Stay inspired and entertained.</p>
+                    <a href="#books" class="btn">See What's New</a>
+                </div>
+                <div class="hero-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2630/2630573.png" alt="Curated">
+                </div>
+            </div>
+        </div>
+        <div class="carousel-slide">
+            <div class="hero">
+                <div class="hero-text">
+                    <h2>Top Picks & Trends 🔥</h2>
+                    <p>Discover the audiobooks trending right now among listeners worldwide.</p>
+                    <a href="#books" class="btn">Browse Now</a>
+                </div>
+                <div class="hero-img">
+                    <img src="https://cdn-icons-png.flaticon.com/512/190/190411.png" alt="Trending">
+                </div>
+            </div>
+        </div>
+        <div class="carousel-dots">
+            <span class="dot active-dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
+        </div>
     </div>
+
+    <!-- Audiobook Grid -->
+    <div class="books-section" id="books">
+        <h3>🎧 Discover Audiobooks</h3>
+        <div class="book-grid">
+            {% for book in audiobooks %}
+                <div class="book-card">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" alt="cover">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
+                    {% endif %}
+                    <h4>{{ book.title }}</h4>
+                    <p><em>{{ book.author }}</em></p>
+                    <a href="{% url 'audiobook_detail_guest' book.id %}">🎧 Listen</a>
+                </div>
+            {% empty %}
+                <p>No audiobooks available yet.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        let slideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            slides.forEach((slide, i) => {
+                slide.classList.remove('active');
+                dots[i].classList.remove('active-dot');
+            });
+            slides[index].classList.add('active');
+            dots[index].classList.add('active-dot');
+        }
+
+        function nextSlide() {
+            slideIndex = (slideIndex + 1) % slides.length;
+            showSlide(slideIndex);
+        }
+
+        dots.forEach((dot, i) => {
+            dot.addEventListener('click', () => {
+                slideIndex = i;
+                showSlide(slideIndex);
+            });
+        });
+
+        setInterval(nextSlide, 7000); // Increased slide time to 7 seconds
+        showSlide(slideIndex);
+    </script>
+
 </body>
 </html>
