@@ -5,6 +5,8 @@ from .forms import RegisterForm, AudioUploadForm
 from .models import Audiobook, Favorite
 from django.contrib.auth.models import User
 from .models import Like
+from django.db.models import Q
+
 
 
 # Register
@@ -41,8 +43,19 @@ def home(request):
     if request.user.is_authenticated:
         return redirect('home_loggedin')  # redirect to a separate view
     else:
-        audiobooks = Audiobook.objects.all()
+        query = request.GET.get('q')
+        if query:
+            audiobooks = Audiobook.objects.filter(
+                Q(title__icontains=query) |
+                Q(author__icontains=query) |
+                Q(genre__icontains=query)
+            ).distinct()
+        else:
+            audiobooks = Audiobook.objects.all()
+    
         return render(request, 'user/guest_home.html', {'audiobooks': audiobooks})
+
+    
 @login_required(login_url='login')
 
 def home_loggedin(request):
@@ -133,5 +146,3 @@ def audiobook_detail(request, pk):
         'is_liked': is_liked,
         'comments': comments
     })
-
-
