@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Welcome | AudioVerse</title>
     <style>
+        /* Your existing styles remain unchanged */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -20,6 +21,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
+            flex-wrap: wrap;
         }
 
         .header h1 {
@@ -55,23 +57,27 @@
             color: #fff;
         }
 
-        .upload-icon {
-            font-size: 20px;
-            padding: 10px 14px;
-            border-radius: 50%;
-            border: 1.5px solid #3f3d56;
-            background: transparent;
+        .search-bar form {
             display: flex;
             align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            text-decoration: none;
-            color: #3f3d56;
         }
 
-        .upload-icon:hover {
-            background-color: #3f3d56;
-            color: #fff;
+        .search-bar input[type="text"] {
+            padding: 10px 20px;
+            width: 260px;
+            border-radius: 25px;
+            border: 1.5px solid #ccc;
+            font-size: 16px;
+            color: #3f3d56;
+            background-color: #fff;
+            outline: none;
+            transition: 0.3s;
+            box-shadow: none;
+        }
+
+        .search-bar input[type="text"]:focus {
+            border-color: #ff6f61;
+            box-shadow: 0 0 0 1.5px rgba(255, 50, 97, 0.2);
         }
 
         h2 {
@@ -149,11 +155,16 @@
             .nav {
                 flex-direction: column;
                 align-items: flex-start;
+                width: 100%;
+            }
+
+            .search-bar input[type="text"] {
+                width: 100%;
+                margin-bottom: 10px;
             }
 
             .nav a,
-            .nav button,
-            .upload-icon {
+            .nav button {
                 margin-bottom: 10px;
             }
         }
@@ -165,7 +176,12 @@
 <div class="header">
     <h1>AudioVerse</h1>
     <div class="nav">
-        <!-- Plus icon for upload -->
+        <div class="search-bar">
+            <form method="GET" action="">
+                <input type="text" name="q" placeholder="Search audiobooks..." value="{{ request.GET.q }}">
+            </form>
+        </div>
+
         <a href="{% url 'favorites' %}">Favorites</a>
         <a href="{% url 'my_uploads' %}">My Uploads</a>
         <a href="{% url 'profile' %}">Profile</a>
@@ -176,26 +192,47 @@
     </div>
 </div>
 
-<!-- Welcome Message -->
 <h2>🎧 Welcome, {{ user.username }}! Explore Audiobooks</h2>
 
-<!-- Audiobook Grid -->
-<div class="grid">
-    {% for book in audiobooks %}
-        <div class="card">
-            {% if book.cover_image %}
-                <img src="{{ book.cover_image.url }}" alt="cover">
-            {% else %}
-                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
-            {% endif %}
-            <h3>{{ book.title }}</h3>
-            <p>{{ book.author }}</p>
-            <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
+<!-- Search Result Section -->
+{% if search_active %}
+    <h2>🔍 Search Results{% if query %} for "{{ query }}"{% endif %}</h2>
+    <div class="grid">
+        {% for book in audiobooks %}
+            <div class="card">
+                {% if book.cover_image %}
+                    <img src="{{ book.cover_image.url }}" alt="cover">
+                {% else %}
+                    <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
+                {% endif %}
+                <h3>{{ book.title }}</h3>
+                <p>{{ book.author }}</p>
+                <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
+            </div>
+        {% empty %}
+            <p style="text-align:center; color:#333;">No results found.</p>
+        {% endfor %}
+    </div>
+{% else %}
+    <!-- Grouped by Genre -->
+    {% for genre, books in grouped_books.items %}
+        <h2>🎧 {{ genre }}</h2>
+        <div class="grid">
+            {% for book in books %}
+                <div class="card">
+                    {% if book.cover_image %}
+                        <img src="{{ book.cover_image.url }}" alt="cover">
+                    {% else %}
+                        <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="no cover">
+                    {% endif %}
+                    <h3>{{ book.title }}</h3>
+                    <p>{{ book.author }}</p>
+                    <a href="{% url 'audiobook_detail' book.id %}">🎧 Listen Now</a>
+                </div>
+            {% endfor %}
         </div>
-    {% empty %}
-        <p style="text-align:center; color:#333;">No audiobooks uploaded yet.</p>
     {% endfor %}
-</div>
+{% endif %}
 
 </body>
 </html>

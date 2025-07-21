@@ -257,6 +257,7 @@
 </head>
 <body>
 
+    <!-- Header -->
     <div class="header">
         <div class="header-left">
             <h1>AudioVerse</h1>
@@ -272,7 +273,7 @@
         </div>
     </div>
 
-    <!-- Carousel section -->
+    <!-- Carousel -->
     <div class="carousel-container">
         <div class="carousel-slide active">
             <div class="hero">
@@ -317,27 +318,48 @@
         </div>
     </div>
 
-    <!-- Audiobook Grid -->
+    <!-- Audiobooks Section -->
     <div class="books-section" id="books">
-        <h3>🎧 Discover Audiobooks</h3>
-        <div class="book-grid">
-            {% for book in audiobooks %}
-                <div class="book-card">
-                    {% if book.cover_image %}
-                        <img src="{{ book.cover_image.url }}" alt="cover">
-                    {% else %}
-                        <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
-                    {% endif %}
-                    <h4>{{ book.title }}</h4>
-                    <p><em>{{ book.author }}</em></p>
-                    <a href="{% url 'audiobook_detail_guest' book.id %}">🎧 Listen</a>
+        {% if search_active %}
+            <h3>🔍 Search Results{% if query %} for "{{ query }}"{% endif %}</h3>
+            <div class="book-grid">
+                {% for book in audiobooks %}
+                    <div class="book-card">
+                        {% if book.cover_image %}
+                            <img src="{{ book.cover_image.url }}" alt="cover">
+                        {% else %}
+                            <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
+                        {% endif %}
+                        <h4>{{ book.title }}</h4>
+                        <p><em>{{ book.author }}</em></p>
+                        <a href="{% url 'audiobook_detail_guest' book.id %}">🎧 Listen</a>
+                    </div>
+                {% empty %}
+                    <p>No results found for "{{ query }}".</p>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% for genre, books in grouped_books.items %}
+                <h3>📚 {{ genre }}</h3>
+                <div class="book-grid">
+                    {% for book in books %}
+                        <div class="book-card">
+                            {% if book.cover_image %}
+                                <img src="{{ book.cover_image.url }}" alt="cover">
+                            {% else %}
+                                <img src="https://via.placeholder.com/200x200?text=No+Cover" alt="No Cover">
+                            {% endif %}
+                            <h4>{{ book.title }}</h4>
+                            <p><em>{{ book.author }}</em></p>
+                            <a href="{% url 'audiobook_detail_guest' book.id %}">🎧 Listen</a>
+                        </div>
+                    {% endfor %}
                 </div>
-            {% empty %}
-                <p>No audiobooks available yet.</p>
             {% endfor %}
-        </div>
+        {% endif %}
     </div>
 
+    <!-- JS -->
     <script>
         let slideIndex = 0;
         const slides = document.querySelectorAll('.carousel-slide');
@@ -364,7 +386,7 @@
             });
         });
 
-        setInterval(nextSlide, 7000); // Increased slide time to 7 seconds
+        setInterval(nextSlide, 7000);
         showSlide(slideIndex);
     </script>
 

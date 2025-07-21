@@ -41,26 +41,73 @@ from django.shortcuts import redirect
 
 def home(request):
     if request.user.is_authenticated:
-        return redirect('home_loggedin')  # redirect to a separate view
+        return redirect('home_loggedin')  # Redirect if user is logged in
+
+    query = request.GET.get('q')
+    genres = Audiobook._meta.get_field('genre').choices
+    grouped_books = {}
+
+    if query:
+        audiobooks = Audiobook.objects.filter(
+            Q(title__icontains=query) |
+            Q(author__icontains=query) |
+            Q(genre__icontains=query)
+        ).distinct()
+        return render(request, 'user/guest_home.html', {
+            'search_active': True,
+            'audiobooks': audiobooks,
+            'query': query
+        })
     else:
-        query = request.GET.get('q')
-        if query:
-            audiobooks = Audiobook.objects.filter(
-                Q(title__icontains=query) |
-                Q(author__icontains=query) |
-                Q(genre__icontains=query)
-            ).distinct()
-        else:
-            audiobooks = Audiobook.objects.all()
-    
-        return render(request, 'user/guest_home.html', {'audiobooks': audiobooks})
+        for genre_key, genre_label in genres:
+            if genre_key:
+                books = Audiobook.objects.filter(genre=genre_key)
+                if books.exists():
+                    grouped_books[genre_label] = books
+
+        return render(request, 'user/guest_home.html', {
+            'search_active': False,
+            'grouped_books': grouped_books
+        })
 
     
+
+from django.db.models import Q
+from .models import Audiobook
+
+
 @login_required(login_url='login')
-
 def home_loggedin(request):
-    audiobooks = Audiobook.objects.all()
-    return render(request, 'user/home_loggedin.html', {'audiobooks': audiobooks})
+    query = request.GET.get('q')
+    genres = Audiobook._meta.get_field('genre').choices
+    grouped_books = {}
+
+    if query:
+        audiobooks = Audiobook.objects.filter(
+            Q(title__icontains=query) |
+            Q(author__icontains=query) |
+            Q(genre__icontains=query)
+        ).distinct()
+        return render(request, 'user/home_loggedin.html', {
+            'search_active': True,
+            'audiobooks': audiobooks,
+            'query': query,
+            'user': request.user
+        })
+
+    else:
+        # Only use genres that have books
+        for genre_key, genre_label in genres:
+            if genre_key:  # Skip blank genre
+                books_in_genre = Audiobook.objects.filter(genre=genre_key)
+                if books_in_genre.exists():
+                    grouped_books[genre_key] = books_in_genre  # Use genre_key or genre_label
+
+        return render(request, 'user/home_loggedin.html', {
+            'search_active': False,
+            'grouped_books': grouped_books,
+            'user': request.user
+        })
 
 
 # Upload Audiobook
